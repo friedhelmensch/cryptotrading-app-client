@@ -4,10 +4,8 @@ import { invokeApig } from '../libs/awsLib';
 import {
   FormGroup,
   FormControl,
-  ControlLabel,
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
-import config from '../config.js';
 import './Settings.css';
 
 class Settings extends Component {

@@ -19,6 +19,7 @@ class Home extends Component {
   }
 
   async componentDidMount() {
+    
     if (this.props.userToken === null) {
       return;
     }
@@ -29,7 +30,7 @@ class Home extends Component {
       const results = await this.settings();
       this.setState({ settings: results });
     }
-    catch(e) {
+    catch(e) {;
       alert(e);
     }
 
@@ -67,8 +68,8 @@ class Home extends Component {
 renderLander() {
   return (
     <div className="lander">
-    <h1>Settings</h1>
-    <p>Shuffle up an deal</p>
+    <h1>Welcome</h1>
+    <p>You can either login or sign up.</p>
     </div>
     );
   }

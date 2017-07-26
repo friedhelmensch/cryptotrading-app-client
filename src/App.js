@@ -20,14 +20,13 @@ class App extends Component {
     super(props);
 
     this.state = {
-      userToken: '',
+      userToken: null,
       isLoadingUserToken: true,
     };
   }
 
   async componentDidMount() {
     const currentUser = this.getCurrentUser();
-
     if (currentUser === null) {
       this.setState({isLoadingUserToken: false});
       return;
@@ -64,12 +63,12 @@ class App extends Component {
     });
   }
 
-
   updateUserToken = (userToken) => {
     this.setState({
       userToken: userToken
     });
   }
+
   handleNavLink = (event) => {
   event.preventDefault();
   this.props.history.push(event.currentTarget.getAttribute('href'));
@@ -81,7 +80,7 @@ class App extends Component {
       if (currentUser !== null) {
         currentUser.signOut();
       }
-      this.updateUserToken('');
+      this.updateUserToken(null);
 
       if (AWS.config.credentials) {
         AWS.config.credentials.clearCachedId();
