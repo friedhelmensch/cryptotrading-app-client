@@ -16,6 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "aws s3 sync build/ s3://crypto-trading --region eu-central-1",
     "eject": "react-scripts eject"
   }
 }
