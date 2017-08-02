@@ -17,6 +17,7 @@ class Settings extends Component {
     isDeleting: null,
     setting: null,
     apiKey: '',
+    apiSecret: '',
     currency: '',
     amount : 0
     };
@@ -25,9 +26,13 @@ class Settings extends Component {
   async componentDidMount() {
     try {
       const results = await this.getSetting();
+      
+      if(!results.apiSecret) results.apiSecret = 'empty';
+      
       this.setState({
         setting: results,
         apiKey: results.apiKey,
+        apiSecret: results.apiSecret,
         currency: results.currency,
         amount: results.amount,
       });
@@ -42,7 +47,7 @@ class Settings extends Component {
   }
 
   validateForm() {
-    return this.state.apiKey.length > 0 && this.state.currency.length > 0 && this.state.amount > 0;
+    return this.state.apiKey.length > 0 && this.state.apiSecret.length > 0 && this.state.currency.length > 0 && this.state.amount > 0;
   }
 
 handleChange = (event) => {
@@ -69,6 +74,7 @@ handleSubmit = async (event) => {
     await this.saveSetting({
       //...this.state.setting,
       apiKey: this.state.apiKey,
+      apiSecret: this.state.apiSecret,
       currency : this.state.currency,
       amount : this.state.amount
     });
@@ -121,6 +127,13 @@ render() {
                 value={this.state.apiKey}
                 componentClass="input" />
             </FormGroup>
+            <label>API secret</label>
+            <FormGroup controlId="apiSecret">
+              <FormControl
+                onChange={this.handleChange}
+                value={this.state.apiSecret}
+                componentClass="input" />
+            </FormGroup>
             <label>Cryptocurrency to buy</label>
             <FormGroup controlId="currency">
               <FormControl
@@ -128,7 +141,7 @@ render() {
                 value={this.state.currency}
                 componentClass="input" />
             </FormGroup>
-            <label>Amount</label>
+            <label>Euro</label>
             <FormGroup controlId="amount">
               <FormControl
                 onChange={this.handleChange}

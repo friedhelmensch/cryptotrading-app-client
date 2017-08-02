@@ -15,13 +15,14 @@ class NewSetting extends Component {
     this.state = {
       isLoading: null,
       apiKey: '',
+      apiSecret: '',
       currency: '',
-      amount : 0
+      amount: 0
     };
   }
 
   validateForm() {
-    return this.state.apiKey.length > 0 && this.state.currency.length > 0 && this.state.amount > 0;
+    return this.state.apiKey.length > 0 && this.state.apiSecret.length > 0 && this.state.currency.length > 0 && this.state.amount > 0;
   }
 
   handleChange = (event) => {
@@ -36,13 +37,14 @@ class NewSetting extends Component {
 
     try {
       await this.createSetting({
-        apiKey : this.state.apiKey,
-        currency : this.state.currency,
-        amount : this.state.amount
+        apiKey: this.state.apiKey,
+        apiSecret: this.state.apiSecret,
+        currency: this.state.currency,
+        amount: this.state.amount
       });
       this.props.history.push('/');
     }
-    catch(e) {
+    catch (e) {
       alert(e);
       this.setState({ isLoading: false });
     }
@@ -60,10 +62,17 @@ class NewSetting extends Component {
       <div className="NewSetting">
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="apiKey">
-            <label>Api key</label>
+            <label>API key</label>
             <FormControl
               onChange={this.handleChange}
               value={this.state.apiKey}
+              componentClass="input" />
+          </FormGroup>
+          <FormGroup controlId="apiSecret">
+            <label>API secret</label>
+            <FormControl
+              onChange={this.handleChange}
+              value={this.state.apiSecret}
               componentClass="input" />
           </FormGroup>
           <label>Cryptocurrency to buy</label>
@@ -73,7 +82,7 @@ class NewSetting extends Component {
               value={this.state.currency}
               componentClass="input" />
           </FormGroup>
-          <label>Amount</label>
+          <label>Euro</label>
           <FormGroup controlId="amount">
             <FormControl
               onChange={this.handleChange}
@@ -84,7 +93,7 @@ class NewSetting extends Component {
             block
             bsStyle="primary"
             bsSize="large"
-            disabled={ ! this.validateForm() }
+            disabled={!this.validateForm()}
             type="submit"
             isLoading={this.state.isLoading}
             text="Create"
