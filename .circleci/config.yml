@@ -7,17 +7,9 @@ jobs:
     steps:
       # install python and awscli
       - run:
-        name: install dep 1
-        working_directory: ~/tmp
-        command: sudo apt-get update && sudo apt-get install -qq -y python-pip libpython-dev
-      - run:
-        name: install dep 2
-        working_directory: ~/tmp
-        command: curl -O https://bootstrap.pypa.io/get-pip.py && sudo python get-pip.py
-      - run:
-        name: install dep 3
-        working_directory: ~/tmp
-        command: curl -O sudo pip install -q awscli --upgrade
+          name: Install dependencies
+          working_directory: ~/tmp
+          command: sudo apt-get update && sudo apt-get install -y awscli
       - checkout
       - run: npm install
       - run: npm run build
