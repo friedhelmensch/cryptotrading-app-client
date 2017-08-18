@@ -7,7 +7,7 @@ jobs:
     steps:
       - run:
           name: Install dependencies
-          working_directory: /
+          working_directory: ~/tmp
           command: |
             sudo apt install python-pip python-dev
             sudo pip install awscli --upgrade --user
