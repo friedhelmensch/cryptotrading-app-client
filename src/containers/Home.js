@@ -69,7 +69,7 @@ renderLander() {
   return (
     <div className="lander">
     <h1>Welcome</h1>
-    <p>You can either login or sign up.</p>
+    <p>You can either login or sign up Yo.</p>
     </div>
     );
   }

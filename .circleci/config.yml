@@ -6,7 +6,7 @@ jobs:
       - image: circleci/node:7
     steps:
       - run:
-          name: Install dependencies
+          name: Install aws cli
           working_directory: ~/tmp
           command: |
             sudo apt install python-pip python-dev
