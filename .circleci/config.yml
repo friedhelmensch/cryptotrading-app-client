@@ -10,5 +10,5 @@ jobs:
           working_directory: ~/tmp
           command: |
             sudo apt install python-pip python-dev
-            pip install awscli
+            sudo pip install awscli
             aws --version
