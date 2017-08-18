@@ -6,13 +6,12 @@ jobs:
       - image: circleci/node:7
     steps:
       # install python and awscli
-      - run:
-          name: Install dependencies
-          working_directory: ~/tmp
-          command: sudo apt-get update && sudo apt-get install -y awscli
+      - run: sudo apt-get update && sudo apt-get install -qq -y python-pip libpython-dev
+      - run: curl -O https://bootstrap.pypa.io/get-pip.py && sudo python get-pip.py
+      - run: sudo pip install -q awscli --upgrade
       - checkout
       - run: npm install
       - run: npm run build
       - deploy:
           name: Deploy to S3
-          command: AWS_DEFAULT_REGION='eu-central-1' aws s3 sync build/ s3://crypto-trading
+          command: aws s3 sync build/ s3://crypto-trading --region eu-central-1
