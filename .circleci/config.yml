@@ -9,14 +9,5 @@ jobs:
           name: Install dependencies
           working_directory: ~/tmp
           command: |
-            sudo apt-get -y -qq update
-            sudo apt-get -y -qq install python3.4-dev
-            curl -O https://bootstrap.pypa.io/get-pip.py
-            python3.4 get-pip.py --user
-            pip install awscli --upgrade --user
-      - checkout
-      - run: npm install
-      - run: npm run build
-      - deploy:
-          name: Deploy to S3
-          command: aws s3 sync build/ s3://crypto-trading --region eu-central-1
+            sudo apt-get install awscli
+            aws --version
