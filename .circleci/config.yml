@@ -5,11 +5,15 @@ jobs:
     docker:
       - image: circleci/node:7
     steps:
-      # install python and awscli
       - run:
           name: Install dependencies
           working_directory: ~/tmp
-          command: sudo apt-get update && sudo apt-get install -y awscli
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get -y -qq install python3.4-dev
+            sudo curl -O https://bootstrap.pypa.io/get-pip.py
+            sudo python3.4 get-pip.py --user
+            sudo pip install awscli --upgrade --user
       - checkout
       - run: npm install
       - run: npm run build
