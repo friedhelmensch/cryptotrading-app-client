@@ -9,5 +9,6 @@ jobs:
           name: Install dependencies
           working_directory: ~/tmp
           command: |
-            sudo apt-get install awscli
+            apt install python-pip python-dev
+            pip install awscli
             aws --version
