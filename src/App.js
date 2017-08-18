@@ -110,14 +110,12 @@ class App extends Component {
              </Navbar.Brand>
             : <Navbar.Brand></Navbar.Brand> }
         </Navbar.Header>
-        <Navbar.Collapse>
           <Nav pullRight>
             { this.state.userToken
             ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
             : [ <RouteNavItem key={1} onClick={this.handleNavLink} href="/signup">Signup</RouteNavItem>,
                 <RouteNavItem key={2} onClick={this.handleNavLink} href="/login">Login</RouteNavItem> ] }
           </Nav>
-        </Navbar.Collapse>
       </Navbar>
       <Routes childProps={childProps} />
     </div>
