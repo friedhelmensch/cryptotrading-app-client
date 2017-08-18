@@ -12,3 +12,9 @@ jobs:
             sudo apt install python-pip python-dev
             sudo pip install awscli
             aws --version
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - deploy:
+          name: Deploy to S3
+          command: aws s3 sync build/ s3://crypto-trading --region eu-central-1
