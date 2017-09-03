@@ -28,7 +28,7 @@ class App extends Component {
   async componentDidMount() {
     const currentUser = this.getCurrentUser();
     if (currentUser === null) {
-      this.setState({isLoadingUserToken: false});
+      this.setState({ isLoadingUserToken: false });
       return;
     }
 
@@ -36,11 +36,11 @@ class App extends Component {
       const userToken = await this.getUserToken(currentUser);
       this.updateUserToken(userToken);
     }
-    catch(e) {
+    catch (e) {
       alert(e);
     }
 
-    this.setState({isLoadingUserToken: false});
+    this.setState({ isLoadingUserToken: false });
   }
 
   getCurrentUser() {
@@ -53,10 +53,10 @@ class App extends Component {
 
   getUserToken(currentUser) {
     return new Promise((resolve, reject) => {
-      currentUser.getSession(function(err, session) {
+      currentUser.getSession(function (err, session) {
         if (err) {
-            reject(err);
-            return;
+          reject(err);
+          return;
         }
         resolve(session.getIdToken().getJwtToken());
       });
@@ -70,56 +70,59 @@ class App extends Component {
   }
 
   handleNavLink = (event) => {
-  event.preventDefault();
-  this.props.history.push(event.currentTarget.getAttribute('href'));
+    event.preventDefault();
+    this.props.history.push(event.currentTarget.getAttribute('href'));
   }
 
   handleLogout = (event) => {
-      const currentUser = this.getCurrentUser();
+    const currentUser = this.getCurrentUser();
 
-      if (currentUser !== null) {
-        currentUser.signOut();
-      }
-      this.updateUserToken(null);
+    if (currentUser !== null) {
+      currentUser.signOut();
+    }
+    this.updateUserToken(null);
 
-      if (AWS.config.credentials) {
-        AWS.config.credentials.clearCachedId();
-        AWS.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
-      }
+    if (AWS.config.credentials) {
+      AWS.config.credentials.clearCachedId();
+      AWS.config.update({ accessKeyId: 'anything', secretAccessKey: 'anything' });
+    }
 
-      this.props.history.push('/login');
+    this.props.history.push('/login');
   }
 
   render() {
-  const childProps = {
-    userToken: this.state.userToken,
-    updateUserToken: this.updateUserToken,
-  };
+    const childProps = {
+      userToken: this.state.userToken,
+      updateUserToken: this.updateUserToken,
+    };
 
-  return ! this.state.isLoadingUserToken
-    &&
-    (<div className="App container">
-      <Navbar fluid collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link to="/">Settings</Link>
-          </Navbar.Brand>
-          { this.state.userToken
-            ? <Navbar.Brand>
-               <Link to="/profile">Profile</Link>
-             </Navbar.Brand>
-            : <Navbar.Brand></Navbar.Brand> }
-        </Navbar.Header>
-          <Nav pullRight>
-            { this.state.userToken
-            ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
-            : [ <RouteNavItem key={1} onClick={this.handleNavLink} href="/signup">Signup</RouteNavItem>,
-                <RouteNavItem key={2} onClick={this.handleNavLink} href="/login">Login</RouteNavItem> ] }
-          </Nav>
-      </Navbar>
-      <Routes childProps={childProps} />
-    </div>
-  );
+    return (
+      !this.state.isLoadingUserToken &&
+      <div className="App container">
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">Settings</Link>
+            </Navbar.Brand>
+            {this.state.userToken
+              ? <Navbar.Brand>
+                <Link to="/profile">Profile</Link>
+              </Navbar.Brand>
+              : <Navbar.Brand></Navbar.Brand>}
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              {this.state.userToken
+                ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                : [<RouteNavItem key={1} onClick={this.handleNavLink} href="/signup">Signup</RouteNavItem>,
+                <RouteNavItem key={2} onClick={this.handleNavLink} href="/login">Login</RouteNavItem>]}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes childProps={childProps} />
+      </div>
+    );
   }
 }
 
