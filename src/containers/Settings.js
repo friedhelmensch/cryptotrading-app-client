@@ -16,8 +16,6 @@ class Settings extends Component {
     isLoading: null,
     isDeleting: null,
     setting: null,
-    apiKey: '',
-    apiSecret: '',
     currency: '',
     amount : 0
     };
@@ -27,12 +25,8 @@ class Settings extends Component {
     try {
       const results = await this.getSetting();
       
-      if(!results.apiSecret) results.apiSecret = 'empty';
-      
       this.setState({
         setting: results,
-        apiKey: results.apiKey,
-        apiSecret: results.apiSecret,
         currency: results.currency,
         amount: results.amount,
       });
@@ -47,7 +41,7 @@ class Settings extends Component {
   }
 
   validateForm() {
-    return this.state.apiKey.length > 0 && this.state.apiSecret.length > 0 && this.state.currency.length > 0 && this.state.amount > 0;
+    return this.state.currency.length > 0 && this.state.amount > 0;
   }
 
 handleChange = (event) => {
@@ -72,9 +66,6 @@ handleSubmit = async (event) => {
   try {
 
     await this.saveSetting({
-      //...this.state.setting,
-      apiKey: this.state.apiKey,
-      apiSecret: this.state.apiSecret,
       currency : this.state.currency,
       amount : this.state.amount
     });
@@ -120,20 +111,6 @@ render() {
     <div className="Settings">
       { this.state.setting &&
         ( <form onSubmit={this.handleSubmit}>
-            <label>API key</label>
-            <FormGroup controlId="apiKey">
-              <FormControl
-                onChange={this.handleChange}
-                value={this.state.apiKey}
-                componentClass="input" />
-            </FormGroup>
-            <label>API secret</label>
-            <FormGroup controlId="apiSecret">
-              <FormControl
-                onChange={this.handleChange}
-                value={this.state.apiSecret}
-                componentClass="input" />
-            </FormGroup>
             <label>Cryptocurrency to buy</label>
             <FormGroup controlId="currency">
               <FormControl

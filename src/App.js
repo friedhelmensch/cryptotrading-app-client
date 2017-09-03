@@ -102,11 +102,11 @@ class App extends Component {
       <Navbar fluid collapseOnSelect>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/">Home</Link>
+            <Link to="/">Settings</Link>
           </Navbar.Brand>
           { this.state.userToken
             ? <Navbar.Brand>
-               <Link to="/results">Results</Link>
+               <Link to="/profile">Profile</Link>
              </Navbar.Brand>
             : <Navbar.Brand></Navbar.Brand> }
         </Navbar.Header>

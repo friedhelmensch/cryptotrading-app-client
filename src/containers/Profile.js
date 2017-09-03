@@ -5,22 +5,22 @@ import {
   FormControl,
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
-import './NewSetting.css';
+import './Profile.css';
 import { invokeApig } from '../libs/awsLib';
 
-class NewSetting extends Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isLoading: null,
-      currency: '',
-      amount: 0
+      apiKey: '',
+      apiSecret: ''
     };
   }
 
   validateForm() {
-    return this.state.currency.length > 0 && this.state.amount > 0;
+    return this.state.apiKey.length > 0 && this.state.apiSecret.length > 0;
   }
 
   handleChange = (event) => {
@@ -29,14 +29,35 @@ class NewSetting extends Component {
     });
   }
 
+  async componentDidMount() {
+    try {
+      const results = await this.getProfile();
+      
+      if(!results.apiSecret) results.apiSecret = 'empty';
+      
+      this.setState({
+        setting: results,
+        apiKey: results.apiKey,
+        apiSecret: results.apiSecret
+      });
+    }
+    catch(e) {
+      alert(e);
+    }
+  }
+
+  getProfile() {
+    return invokeApig({ path: `/profile` }, this.props.userToken);
+  }
+
   handleSubmit = async (event) => {
     event.preventDefault();
     this.setState({ isLoading: true });
 
     try {
-      await this.createSetting({
-        currency: this.state.currency,
-        amount: this.state.amount
+      await this.saveProfile({
+        apiKey: this.state.apiKey,
+        apiSecret: this.state.apiSecret
       });
       this.props.history.push('/');
     }
@@ -46,29 +67,30 @@ class NewSetting extends Component {
     }
   }
 
-  createSetting(setting) {
+  saveProfile(profile) {
     return invokeApig({
-      path: '/settings',
-      method: 'POST',
-      body: setting,
+      path: '/profile',
+      method: 'PUT',
+      body: profile,
     }, this.props.userToken);
   }
+
   render() {
     return (
-      <div className="NewSetting">
+      <div className="Profile">
         <form onSubmit={this.handleSubmit}>
-          <label>Cryptocurrency to buy</label>
-          <FormGroup controlId="currency">
+          <FormGroup controlId="apiKey">
+            <label>API key</label>
             <FormControl
               onChange={this.handleChange}
-              value={this.state.currency}
+              value={this.state.apiKey}
               componentClass="input" />
           </FormGroup>
-          <label>Euro</label>
-          <FormGroup controlId="amount">
+          <FormGroup controlId="apiSecret">
+            <label>API secret</label>
             <FormControl
               onChange={this.handleChange}
-              value={this.state.amount}
+              value={this.state.apiSecret}
               componentClass="input" />
           </FormGroup>
           <LoaderButton
@@ -78,12 +100,12 @@ class NewSetting extends Component {
             disabled={!this.validateForm()}
             type="submit"
             isLoading={this.state.isLoading}
-            text="Create"
-            loadingText="Creating…" />
+            text="Save"
+            loadingText="Saving" />
         </form>
       </div>
     );
   }
 }
 
-export default withRouter(NewSetting);
+export default withRouter(Profile);
