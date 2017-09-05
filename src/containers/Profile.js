@@ -26,8 +26,7 @@ class Profile extends Component {
   }
 
   async reloadProfile() {
-    var profile;
-    profile = await this.getProfile();
+    var profile = await this.getProfile();
     if (profile) {
       this.setState({
         apiKey: profile.apiKey,
@@ -36,8 +35,8 @@ class Profile extends Component {
     }
     else {
       this.setState({
-        apiKey: null,
-        apiSecret: null
+        apiKey: '',
+        apiSecret: ''
       });
     }
   }
@@ -172,7 +171,7 @@ class ProfileReadonly extends Component {
 
     try {
       await this.props.deleteProfile();
-      this.props.profileChanged();
+      await this.props.profileChanged();
     }
     catch (e) {
       alert(e);
