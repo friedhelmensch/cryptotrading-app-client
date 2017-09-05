@@ -106,7 +106,7 @@ class App extends Component {
             </Navbar.Brand>
             {this.state.userToken
               ? <Navbar.Brand>
-                <Link to="/profile">Profile</Link>
+                <Link to="/profile">Api Keys</Link>
               </Navbar.Brand>
               : <Navbar.Brand></Navbar.Brand>}
             <Navbar.Toggle />

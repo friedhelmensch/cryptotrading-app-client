@@ -13,8 +13,6 @@ class Profile extends Component {
     super(props);
 
     this.deleteProfile = this.deleteProfile.bind(this);
-    this.profileDeleted = this.profileDeleted.bind(this);
-    
     this.saveProfile = this.saveProfile.bind(this);
     this.reloadProfile = this.reloadProfile.bind(this);
 
@@ -29,16 +27,17 @@ class Profile extends Component {
 
   async reloadProfile() {
     var profile;
-    try {
-      profile = await this.getProfile();
+    profile = await this.getProfile();
+    if (profile) {
       this.setState({
-        profile: profile,
         apiKey: profile.apiKey,
         apiSecret: profile.apiSecret
       });
-    } catch (e) {
+    }
+    else {
       this.setState({
-        profile: null
+        apiKey: null,
+        apiSecret: null
       });
     }
   }
@@ -55,36 +54,23 @@ class Profile extends Component {
     }, this.props.userToken);
   }
 
-  //implement delete api and uncomment
   async deleteProfile() {
-    /*
     return invokeApig({
-      path: `/profile/}`,
+      path: `/profile`,
       method: 'DELETE',
-    }, this.props.userToken);*/
-    return null;
-  }
-
-  //replace this with reload when delete is implemented
-  profileDeleted() {
-    this.setState(
-      {
-        profile: null,
-        apiKey: '',
-        apiSecret: ''
-      });
+    }, this.props.userToken);
   }
 
   render() {
-    if (this.state.profile) {
+    if (this.state.apiKey && this.state.apiSecret) {
       return (
-                                                                                                      //replace this with reload when delete is implemented
-        <ReadonlyProfile apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.profileDeleted} />
+        //replace this with reload when delete is implemented
+        <ProfileReadonly apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.reloadProfile} />
       )
     }
     else {
       return (
-        <WritableProfile saveProfile={this.saveProfile} profileChanged={this.reloadProfile}/>
+        <ProfileWritable saveProfile={this.saveProfile} profileChanged={this.reloadProfile} />
       )
     }
   }
@@ -92,7 +78,7 @@ class Profile extends Component {
 
 export default withRouter(Profile);
 
-class WritableProfile extends Component {
+class ProfileWritable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -107,7 +93,7 @@ class WritableProfile extends Component {
     this.setState({ isLoading: true });
 
     try {
-      
+
       await this.props.saveProfile({
         apiKey: this.state.apiKey,
         apiSecret: this.state.apiSecret
@@ -163,7 +149,7 @@ class WritableProfile extends Component {
   }
 }
 
-class ReadonlyProfile extends Component {
+class ProfileReadonly extends Component {
   constructor(props) {
     super(props);
 
