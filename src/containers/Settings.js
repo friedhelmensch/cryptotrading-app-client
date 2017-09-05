@@ -13,25 +13,25 @@ class Settings extends Component {
     super(props);
 
     this.state = {
-    isLoading: null,
-    isDeleting: null,
-    setting: null,
-    currency: '',
-    amount : 0
+      isLoading: null,
+      isDeleting: null,
+      setting: null,
+      currency: '',
+      amount: 0
     };
   }
 
   async componentDidMount() {
     try {
       const results = await this.getSetting();
-      
+
       this.setState({
         setting: results,
         currency: results.currency,
         amount: results.amount,
       });
     }
-    catch(e) {
+    catch (e) {
       alert(e);
     }
   }
@@ -44,73 +44,73 @@ class Settings extends Component {
     return this.state.currency.length > 0 && this.state.amount > 0;
   }
 
-handleChange = (event) => {
-  this.setState({
-    [event.target.id]: event.target.value
-  });
-}
-
-saveSetting(setting) {
-  return invokeApig({
-    path: `/settings/${this.props.match.params.id}`,
-    method: 'PUT',
-    body: setting,
-  }, this.props.userToken);
-}
-
-handleSubmit = async (event) => {
-  event.preventDefault();
-
-  this.setState({ isLoading: true });
-
-  try {
-
-    await this.saveSetting({
-      currency : this.state.currency,
-      amount : this.state.amount
+  handleChange = (event) => {
+    this.setState({
+      [event.target.id]: event.target.value
     });
-
-    this.props.history.push('/');
-  }
-  catch(e) {
-    alert(e);
-    this.setState({ isLoading: false });
-  }
-}
-
-deleteSetting() {
-  return invokeApig({
-    path: `/settings/${this.props.match.params.id}`,
-    method: 'DELETE',
-  }, this.props.userToken);
-}
-
-handleDelete = async (event) => {
-  event.preventDefault();
-
-  const confirmed = window.confirm('Are you sure you want to delete this setting?');
-
-  if ( ! confirmed) {
-    return;
   }
 
-  this.setState({ isDeleting: true });
-
-  try {
-    await this.deleteSetting();
-    this.props.history.push('/');
+  saveSetting(setting) {
+    return invokeApig({
+      path: `/settings/${this.props.match.params.id}`,
+      method: 'PUT',
+      body: setting,
+    }, this.props.userToken);
   }
-  catch(e) {
-    alert(e);
-    this.setState({ isDeleting: false });
-  }
-}
 
-render() {
-  return (
-    <div className="Settings">
-      { this.state.setting &&
-        ( <form onSubmit={this.handleSubmit}>
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    this.setState({ isLoading: true });
+
+    try {
+
+      await this.saveSetting({
+        currency: this.state.currency,
+        amount: this.state.amount
+      });
+
+      this.props.history.push('/');
+    }
+    catch (e) {
+      alert(e);
+      this.setState({ isLoading: false });
+    }
+  }
+
+  deleteSetting() {
+    return invokeApig({
+      path: `/settings/${this.props.match.params.id}`,
+      method: 'DELETE',
+    }, this.props.userToken);
+  }
+
+  handleDelete = async (event) => {
+    event.preventDefault();
+
+    const confirmed = window.confirm('Are you sure you want to delete this setting?');
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.setState({ isDeleting: true });
+
+    try {
+      await this.deleteSetting();
+      this.props.history.push('/');
+    }
+    catch (e) {
+      alert(e);
+      this.setState({ isDeleting: false });
+    }
+  }
+
+  render() {
+    return (
+      <div className="Settings">
+        {this.state.setting &&
+          (<form onSubmit={this.handleSubmit}>
             <label>Cryptocurrency to buy</label>
             <FormGroup controlId="currency">
               <FormControl
@@ -129,7 +129,7 @@ render() {
               block
               bsStyle="primary"
               bsSize="large"
-              disabled={ ! this.validateForm() }
+              disabled={!this.validateForm()}
               type="submit"
               isLoading={this.state.isLoading}
               text="Save"
@@ -140,12 +140,12 @@ render() {
               bsSize="large"
               isLoading={this.state.isDeleting}
               onClick={this.handleDelete}
-                text="Delete"
-                loadingText="Deleting…" />
-          </form> )}
+              text="Delete"
+              loadingText="Deleting…" />
+          </form>)}
       </div>
     );
-}
+  }
 }
 
 export default withRouter(Settings);
