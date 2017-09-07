@@ -5,6 +5,7 @@ export function getDisplayname(currency) {
 }
 
 export function getCurrencyOptions() {
+    //remove later
     return options;
 }
 
