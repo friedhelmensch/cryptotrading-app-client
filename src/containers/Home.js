@@ -48,8 +48,8 @@ class Home extends Component {
               key={setting.settingId}
               href={`/settings/${setting.settingId}`}
               onClick={this.handleSettingClick}
-              header={setting.currency.trim().split('\n')[0]}>
-                { "Created: " + (new Date(setting.createdAt)).toLocaleString() }
+              header={this.getDisplayname(setting.currency)}>
+                { "Invest: " + setting.amount }
             </ListGroupItem> )
         : ( <ListGroupItem
               key="new"
@@ -64,6 +64,21 @@ class Home extends Component {
     event.preventDefault();
     this.props.history.push(event.currentTarget.getAttribute('href'));
   }
+
+getDisplayname(currency)
+{
+  if(currency == "XXBTZEUR") return "Bitcoin";
+  if(currency == "XETHZEUR") return "Ether";
+  if(currency == "DASHEUR") return "Dash";
+  if(currency == "XZECZEUR") return "ZCash";
+  if(currency == "BCHEUR") return "Bitcoin Cash (shitcoin)";
+  if(currency == "XXMRZEUR") return "Monero";
+  if(currency == "XLTCZEUR") return "Litecoin";
+  if(currency == "XETCZEUR") return "Ether Classic (shitcoin)";
+  if(currency == "XXRPZEUR") return "Ripple";
+  if(currency == "XREPZEUR") return "Augur";
+  return currency;
+}
 
 renderLander() {
   return (
