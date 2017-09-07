@@ -67,16 +67,16 @@ class Home extends Component {
 
 getDisplayname(currency)
 {
-  if(currency == "XXBTZEUR") return "Bitcoin";
-  if(currency == "XETHZEUR") return "Ether";
-  if(currency == "DASHEUR") return "Dash";
-  if(currency == "XZECZEUR") return "ZCash";
-  if(currency == "BCHEUR") return "Bitcoin Cash (shitcoin)";
-  if(currency == "XXMRZEUR") return "Monero";
-  if(currency == "XLTCZEUR") return "Litecoin";
-  if(currency == "XETCZEUR") return "Ether Classic (shitcoin)";
-  if(currency == "XXRPZEUR") return "Ripple";
-  if(currency == "XREPZEUR") return "Augur";
+  if(currency === "XXBTZEUR") return "Bitcoin";
+  if(currency === "XETHZEUR") return "Ether";
+  if(currency === "DASHEUR") return "Dash";
+  if(currency === "XZECZEUR") return "ZCash";
+  if(currency === "BCHEUR") return "Bitcoin Cash (shitcoin)";
+  if(currency === "XXMRZEUR") return "Monero";
+  if(currency === "XLTCZEUR") return "Litecoin";
+  if(currency === "XETCZEUR") return "Ether Classic (shitcoin)";
+  if(currency === "XXRPZEUR") return "Ripple";
+  if(currency === "XREPZEUR") return "Augur";
   return currency;
 }
 
