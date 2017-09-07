@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { invokeApig } from '../libs/awsLib';
+import { getDisplayname, getCurrencyOptions } from '../libs/currencyHelper';
 import {
   FormGroup,
   FormControl,
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import './Settings.css';
+import Dropdown from 'react-dropdown'
 
 class Settings extends Component {
   constructor(props) {
@@ -47,6 +49,12 @@ class Settings extends Component {
   handleChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value
+    });
+  }
+
+  currencyChanged = (options) => {
+    this.setState({
+      currency: options.value
     });
   }
 
@@ -112,12 +120,9 @@ class Settings extends Component {
         {this.state.setting &&
           (<form onSubmit={this.handleSubmit}>
             <label>Cryptocurrency to buy</label>
-            <FormGroup controlId="currency">
-              <FormControl
-                onChange={this.handleChange}
-                value={this.state.currency}
-                componentClass="input" />
-            </FormGroup>
+
+            <Dropdown options={getCurrencyOptions()} onChange={this.currencyChanged} value={getDisplayname(this.state.currency)} placeholder="Select an option" />
+
             <label>Euro</label>
             <FormGroup controlId="amount">
               <FormControl

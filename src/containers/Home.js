@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import './Home.css';
 import { invokeApig } from '../libs/awsLib';
+import { getDisplayname } from '../libs/currencyHelper';
 
 class Home extends Component {
 
@@ -48,7 +49,7 @@ class Home extends Component {
               key={setting.settingId}
               href={`/settings/${setting.settingId}`}
               onClick={this.handleSettingClick}
-              header={this.getDisplayname(setting.currency)}>
+              header={getDisplayname(setting.currency)}>
                 { "Invest: " + setting.amount }
             </ListGroupItem> )
         : ( <ListGroupItem
@@ -64,21 +65,6 @@ class Home extends Component {
     event.preventDefault();
     this.props.history.push(event.currentTarget.getAttribute('href'));
   }
-
-getDisplayname(currency)
-{
-  if(currency === "XXBTZEUR") return "Bitcoin";
-  if(currency === "XETHZEUR") return "Ether";
-  if(currency === "DASHEUR") return "Dash";
-  if(currency === "XZECZEUR") return "ZCash";
-  if(currency === "BCHEUR") return "Bitcoin Cash (shitcoin)";
-  if(currency === "XXMRZEUR") return "Monero";
-  if(currency === "XLTCZEUR") return "Litecoin";
-  if(currency === "XETCZEUR") return "Ether Classic (shitcoin)";
-  if(currency === "XXRPZEUR") return "Ripple";
-  if(currency === "XREPZEUR") return "Augur";
-  return currency;
-}
 
 renderLander() {
   return (

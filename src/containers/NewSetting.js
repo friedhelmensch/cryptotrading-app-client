@@ -7,6 +7,8 @@ import {
 import LoaderButton from '../components/LoaderButton';
 import './NewSetting.css';
 import { invokeApig } from '../libs/awsLib';
+import Dropdown from 'react-dropdown'
+import { getDisplayname, getCurrencyOptions } from '../libs/currencyHelper';
 
 class NewSetting extends Component {
   constructor(props) {
@@ -23,6 +25,11 @@ class NewSetting extends Component {
     return this.state.currency.length > 0 && this.state.amount > 0;
   }
 
+  currencyChanged = (options) => {
+    this.setState({
+      currency: options.value
+    });
+  }
   handleChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value
@@ -53,17 +60,13 @@ class NewSetting extends Component {
       body: setting,
     }, this.props.userToken);
   }
+
   render() {
     return (
       <div className="NewSetting">
         <form onSubmit={this.handleSubmit}>
           <label>Cryptocurrency to buy</label>
-          <FormGroup controlId="currency">
-            <FormControl
-              onChange={this.handleChange}
-              value={this.state.currency}
-              componentClass="input" />
-          </FormGroup>
+          <Dropdown options={getCurrencyOptions()} onChange={this.currencyChanged} value={getDisplayname(this.state.currency)} placeholder="Select an option" />
           <label>Euro</label>
           <FormGroup controlId="amount">
             <FormControl
