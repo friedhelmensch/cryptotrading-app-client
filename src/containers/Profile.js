@@ -17,7 +17,7 @@ class Profile extends Component {
     this.reloadProfile = this.reloadProfile.bind(this);
 
     this.state = {
-      isLoading: false
+      active: false
     };
   }
 
@@ -30,13 +30,15 @@ class Profile extends Component {
     if (profile) {
       this.setState({
         apiKey: profile.apiKey,
-        apiSecret: profile.apiSecret
+        apiSecret: profile.apiSecret,
+        active: profile.active
       });
     }
     else {
       this.setState({
         apiKey: '',
-        apiSecret: ''
+        apiSecret: '',
+        active: false
       });
     }
   }
@@ -60,11 +62,27 @@ class Profile extends Component {
     }, this.props.userToken);
   }
 
+  toggleCheckboxChange = (checkboxChangedEvent) => {
+    const profile = {
+      active: checkboxChangedEvent.target.checked
+    }
+    this.saveProfile(profile);
+  }
+
   render() {
     if (this.state.apiKey && this.state.apiSecret) {
       return (
-        //replace this with reload when delete is implemented
-        <ProfileReadonly apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.reloadProfile} />
+        <form>
+          <label>
+            Active:
+           <div className="checkbox">
+              <label>
+                <input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} />
+              </label>
+            </div>
+          </label>
+          <ProfileReadonly apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.reloadProfile} />
+        </form>
       )
     }
     else {
