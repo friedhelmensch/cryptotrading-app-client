@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-  FormGroup,
-  FormControl,
-} from 'react-bootstrap';
-import LoaderButton from '../components/LoaderButton';
 import './Profile.css';
 import { invokeApig } from '../libs/awsLib';
+import ProfileWritable from './ProfileWritable';
+import ProfileReadonly from './ProfileReadonly';
 
 class Profile extends Component {
   constructor(props) {
@@ -72,17 +69,17 @@ class Profile extends Component {
   render() {
     if (this.state.apiKey && this.state.apiSecret) {
       return (
-        <form>
+        <div>
           <label>
             Active:
            <div className="checkbox">
               <label>
                 <input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} />
               </label>
-            </div>
+           </div>
           </label>
           <ProfileReadonly apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.reloadProfile} />
-        </form>
+        </div>
       )
     }
     else {
@@ -94,135 +91,3 @@ class Profile extends Component {
 }
 
 export default withRouter(Profile);
-
-class ProfileWritable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      apiKey: '',
-      apiSecret: ''
-    };
-  }
-
-  handleSubmit = async (event) => {
-    event.preventDefault();
-    this.setState({ isLoading: true });
-
-    try {
-
-      await this.props.saveProfile({
-        apiKey: this.state.apiKey,
-        apiSecret: this.state.apiSecret
-      });
-
-      await this.props.profileChanged();
-
-    }
-    catch (e) {
-      alert(e);
-      this.setState({ isLoading: false });
-    }
-  }
-
-  validateForm() {
-    return this.state.apiKey.length > 0 && this.state.apiSecret.length > 0;
-  }
-
-  handleChange = (event) => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="apiKey">
-          <label>API key</label>
-          <FormControl
-            onChange={this.handleChange}
-            value={this.state.apiKey}
-            componentClass="input" />
-        </FormGroup>
-        <FormGroup controlId="apiSecret">
-          <label>API secret</label>
-          <FormControl
-            onChange={this.handleChange}
-            value={this.state.apiSecret}
-            componentClass="input" />
-        </FormGroup>
-        <LoaderButton
-          block
-          bsStyle="primary"
-          bsSize="large"
-          disabled={!this.validateForm()}
-          type="submit"
-          isLoading={this.state.isLoading}
-          text="Save"
-          loadingText="Saving" />
-      </form>
-    );
-  }
-}
-
-class ProfileReadonly extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      apiKey: this.props.apiKey,
-      apiSecret: this.props.apiSecret,
-    };
-  }
-
-  handleDelete = async (event) => {
-    event.preventDefault();
-
-    const confirmed = window.confirm('Are you sure you want to delete these api keys?');
-
-    if (!confirmed) {
-      return;
-    }
-
-    this.setState({ isDeleting: true });
-
-    try {
-      await this.props.deleteProfile();
-      await this.props.profileChanged();
-    }
-    catch (e) {
-      alert(e);
-      this.setState({ isDeleting: false });
-    }
-  }
-
-  render() {
-    return (
-      <div className="Profile">
-        <form>
-          <FormGroup controlId="apiKey">
-            <label>API key</label>
-            <FormControl
-              value={this.state.apiKey}
-              disabled />
-          </FormGroup>
-          <FormGroup controlId="apiSecret">
-            <label>API secret</label>
-            <FormControl
-              value={this.state.apiSecret}
-              disabled />
-          </FormGroup>
-          <LoaderButton
-            block
-            bsStyle="primary"
-            bsSize="large"
-            isLoading={this.state.isLoading}
-            onClick={this.handleDelete}
-            text="Delete"
-            loadingText="Deleting" />
-        </form>
-      </div>
-    );
-  }
-}
