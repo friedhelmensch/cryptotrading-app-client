@@ -4,8 +4,8 @@ import {
   FormControl,
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
-//import NodeRSA from 'node-rsa';
-//import keyStore from '../keyStore.js';
+import NodeRSA from 'node-rsa';
+import keyStore from '../keyStore.js';
 
 class ProfileWritable extends Component {
     constructor(props) {
@@ -22,19 +22,15 @@ class ProfileWritable extends Component {
       this.setState({ isLoading: true });
   
       try {
-  
-        /*
+        
         const encryptor = new NodeRSA();
         encryptor.importKey(keyStore.publicKey, "public");
         var encryptedApiKey = encryptor.encrypt(this.state.apiKey, "base64");
         var encryptedApiSecret = encryptor.encrypt(this.state.apiSecret, "base64");
-        console.log(encryptedApiKey);
-        console.log(encryptedApiSecret);
-        */
-
+        
         await this.props.saveProfile({
-          apiKey: this.state.apiKey,
-          apiSecret: this.state.apiSecret
+          apiKey: encryptedApiKey,
+          apiSecret: encryptedApiSecret
         });
   
         await this.props.profileChanged();

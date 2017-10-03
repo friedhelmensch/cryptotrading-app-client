@@ -106,9 +106,9 @@ class App extends Component {
             </Navbar.Brand>
             {this.state.userToken
               ? [
-                <Navbar.Brand key = "1"> 
+                /*<Navbar.Brand key = "1"> 
                   <Link to="/orders">Orders</Link> 
-                  </Navbar.Brand>,
+                  </Navbar.Brand>,*/
                 <Navbar.Brand key = "2"> 
                   <Link to="/profile">Api Keys</Link> 
                   </Navbar.Brand> ]
