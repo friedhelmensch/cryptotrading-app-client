@@ -11,6 +11,7 @@ class Profile extends Component {
 
     this.deleteProfile = this.deleteProfile.bind(this);
     this.saveProfile = this.saveProfile.bind(this);
+    this.createProfile = this.createProfile.bind(this);
     this.reloadProfile = this.reloadProfile.bind(this);
 
     this.state = {
@@ -24,18 +25,18 @@ class Profile extends Component {
 
   async reloadProfile() {
     var profile = await this.getProfile();
-    if (profile) {
-      this.setState({
-        apiKey: profile.apiKey,
-        apiSecret: profile.apiSecret,
-        active: profile.active
-      });
-    }
-    else {
+    if (profile.noProfile) {
       this.setState({
         apiKey: '',
         apiSecret: '',
         active: false
+      });
+    }
+    else {
+      this.setState({
+        apiKey: "***encrypted***",
+        apiSecret: "***encrypted***",
+        active: profile.active
       });
     }
   }
@@ -52,6 +53,14 @@ class Profile extends Component {
     }, this.props.userToken);
   }
 
+  async createProfile(profile) {
+    return invokeApig({
+      path: '/profile',
+      method: 'POST',
+      body: profile,
+    }, this.props.userToken);
+  }
+
   async deleteProfile() {
     return invokeApig({
       path: `/profile`,
@@ -61,7 +70,11 @@ class Profile extends Component {
 
   toggleCheckboxChange = (checkboxChangedEvent) => {
     const profile = {
-      active: checkboxChangedEvent.target.checked
+      active: checkboxChangedEvent.target.checked,
+      spread: 111,
+      buyFactor: 222,
+      targetProfit : 333,
+      euroLimit : 444,
     }
     this.saveProfile(profile);
   }
@@ -84,7 +97,7 @@ class Profile extends Component {
     }
     else {
       return (
-        <ProfileWritable saveProfile={this.saveProfile} profileChanged={this.reloadProfile} />
+        <ProfileWritable createProfile={this.createProfile} profileChanged={this.reloadProfile} />
       )
     }
   }

@@ -28,9 +28,13 @@ class ProfileWritable extends Component {
         var encryptedApiKey = encryptor.encrypt(this.state.apiKey, "base64");
         var encryptedApiSecret = encryptor.encrypt(this.state.apiSecret, "base64");
         
-        await this.props.saveProfile({
+        await this.props.createProfile({
           apiKey: encryptedApiKey,
-          apiSecret: encryptedApiSecret
+          apiSecret: encryptedApiSecret,
+          spread: 5.55,
+          buyFactor: 6.66,
+          targetProfit : 7.77,
+          euroLimit : 8.88
         });
   
         await this.props.profileChanged();
