@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import './Profile.css';
 import { invokeApig } from '../libs/awsLib';
-import ProfileWritable from './ProfileWritable';
-import ProfileReadonly from './ProfileReadonly';
+import ProfileCreate from './ProfileCreate';
+import ProfileEdit from './ProfileEdit';
 
 class Profile extends Component {
   constructor(props) {
@@ -15,7 +15,8 @@ class Profile extends Component {
     this.reloadProfile = this.reloadProfile.bind(this);
 
     this.state = {
-      active: false
+      active: false,
+      noProfile : true
     };
   }
 
@@ -27,16 +28,15 @@ class Profile extends Component {
     var profile = await this.getProfile();
     if (profile.noProfile) {
       this.setState({
-        apiKey: '',
-        apiSecret: '',
-        active: false
+        noProfile: true
       });
     }
     else {
       this.setState({
         apiKey: "***encrypted***",
         apiSecret: "***encrypted***",
-        active: profile.active
+        active: profile.active,
+        noProfile : false
       });
     }
   }
@@ -68,38 +68,17 @@ class Profile extends Component {
     }, this.props.userToken);
   }
 
-  toggleCheckboxChange = (checkboxChangedEvent) => {
-    const profile = {
-      active: checkboxChangedEvent.target.checked,
-      spread: 111,
-      buyFactor: 222,
-      targetProfit : 333,
-      euroLimit : 444,
-    }
-    this.saveProfile(profile);
-  }
-
   render() {
-    if (this.state.apiKey && this.state.apiSecret) {
-      return (
-        <div>
-          <label>
-            Active:
-           <div className="checkbox">
-              <label>
-                <input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} />
-              </label>
-           </div>
-          </label>
-          <ProfileReadonly apiKey={this.state.apiKey} apiSecret={this.state.apiSecret} deleteProfile={this.deleteProfile} profileChanged={this.reloadProfile} />
-        </div>
-      )
-    }
-    else {
-      return (
-        <ProfileWritable createProfile={this.createProfile} profileChanged={this.reloadProfile} />
-      )
-    }
+    if (this.state.noProfile)
+      return <ProfileCreate createProfile={this.createProfile} profileChanged={this.reloadProfile} />
+    else
+      return <ProfileEdit
+        active={this.state.active}
+        apiKey={this.state.apiKey}
+        apiSecret={this.state.apiSecret}
+        deleteProfile={this.deleteProfile}
+        profileChanged={this.reloadProfile}
+        saveProfile={this.saveProfile} />
   }
 }
 

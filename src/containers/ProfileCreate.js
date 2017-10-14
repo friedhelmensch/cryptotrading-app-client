@@ -7,7 +7,7 @@ import LoaderButton from '../components/LoaderButton';
 import NodeRSA from 'node-rsa';
 import keyStore from '../keyStore.js';
 
-class ProfileWritable extends Component {
+class ProfileCreate extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -22,7 +22,6 @@ class ProfileWritable extends Component {
       this.setState({ isLoading: true });
   
       try {
-        
         const encryptor = new NodeRSA();
         encryptor.importKey(keyStore.publicKey, "public");
         var encryptedApiKey = encryptor.encrypt(this.state.apiKey, "base64");
@@ -31,10 +30,10 @@ class ProfileWritable extends Component {
         await this.props.createProfile({
           apiKey: encryptedApiKey,
           apiSecret: encryptedApiSecret,
-          spread: 5.55,
-          buyFactor: 6.66,
-          targetProfit : 7.77,
-          euroLimit : 8.88
+          spread: 5,
+          buyFactor: 1.7,
+          targetProfit : 3,
+          euroLimit : 0
         });
   
         await this.props.profileChanged();
@@ -82,10 +81,10 @@ class ProfileWritable extends Component {
             type="submit"
             isLoading={this.state.isLoading}
             text="Save"
-            loadingText="Saving" />
+            loadingText="Saving..." />
         </form>
       );
     }
   }
 
-export default ProfileWritable;
+export default ProfileCreate;

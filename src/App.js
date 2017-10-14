@@ -110,7 +110,7 @@ class App extends Component {
                   <Link to="/orders">Orders</Link> 
                   </Navbar.Brand>,*/
                 <Navbar.Brand key = "2"> 
-                  <Link to="/profile">Api Keys</Link> 
+                  <Link to="/profile">Profile</Link> 
                   </Navbar.Brand> ]
               : <Navbar.Brand></Navbar.Brand>}
             <Navbar.Toggle />
