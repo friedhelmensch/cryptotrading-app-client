@@ -31,7 +31,7 @@ class ProfileCreate extends Component {
           apiKey: encryptedApiKey,
           apiSecret: encryptedApiSecret,
           spread: 5,
-          buyFactor: 1.7,
+          buyFactor: 1.6,
           targetProfit : 3,
           euroLimit : 0
         });

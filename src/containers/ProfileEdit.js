@@ -4,6 +4,8 @@ import {
   FormControl,
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
+import './ProfileEdit.css';
+import Dropdown from 'react-dropdown';
 
 class ProfileEdit extends Component {
   constructor(props) {
@@ -12,8 +14,13 @@ class ProfileEdit extends Component {
     this.state = {
       apiKey: this.props.apiKey,
       apiSecret: this.props.apiSecret,
-      active: this.props.active
-    };
+      active: this.props.active,
+      //convert number to string because dropdown can only handle strings properly
+      spread: "" + this.props.spread,
+      buyFactor: "" + this.props.buyFactor,
+      targetProfit : "" + this.props.targetProfit,
+      euroLimit : "" + this.props.euroLimit
+    }; 
   }
 
   handleDelete = async (event) => {
@@ -45,10 +52,11 @@ class ProfileEdit extends Component {
     try {
       var profile = {
         active: this.state.active,
-        spread: 999,
-        buyFactor: 888,
-        targetProfit: 777,
-        euroLimit: 555,
+        //convert strings to numbers again
+        spread: this.state.spread * 1,
+        buyFactor: this.state.buyFactor * 1,
+        targetProfit: this.state.targetProfit *  1,
+        euroLimit: this.state.euroLimit * 1,
       };
       await this.props.saveProfile(profile);
       this.setState({ isSaving: false });
@@ -65,18 +73,44 @@ class ProfileEdit extends Component {
     })
   }
 
+  buyFactorChanged = (options) => {
+    this.setState({
+      buyFactor: options.value
+    });
+  }
+
+  spreadChanged = (options) => {
+    this.setState({
+      spread: options.value
+    });
+  }
+
+  targetProfitChanged = (options) => {
+    this.setState({
+      targetProfit: options.value
+    });
+  }
+
+  euroLimitChanged = (options) => {
+    this.setState({
+      euroLimit: options.value
+    });
+  }
+
   render() {
     return (
       <div className="Profile">
         <form>
-          <label>
-            Active:
-       <div className="checkbox">
-              <label>
-                <input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} />
-              </label>
-            </div>
-          </label>
+          <label> Active: </label>
+          <div><input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} /> </div>
+          <label> Spread: </label>
+          <Dropdown options={[{ value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.spreadChanged} value={this.state.spread} placeholder="Select an option" />
+          <label> Buy Factor: </label>
+          <Dropdown options={[{ value: "1.2" }, { value: "1.3" }, { value: "1.4" }, { value: "1.5" }, { value: "1.6" }, { value: "1.7" }]} onChange={this.buyFactorChanged} value={this.state.buyFactor} placeholder="Select an option" />
+          <label> Profit (%): </label>
+          <Dropdown options={[{ value: "2" }, { value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.targetProfitChanged} value={this.state.targetProfit} placeholder="Select an option" />
+          <label> Limit (€) : </label>
+          <Dropdown options={[{ value: "0" }, { value: "100" }, { value: "200" }, { value: "500" }, { value: "1000" }, { value: "2000" }]} onChange={this.euroLimitChanged} value={this.state.euroLimit} placeholder="Select an option" />
           <FormGroup controlId="apiKey">
             <label>API key</label>
             <FormControl

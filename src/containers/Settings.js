@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import './Settings.css';
-import Dropdown from 'react-dropdown'
+import Dropdown from 'react-dropdown';
 
 class Settings extends Component {
   constructor(props) {
