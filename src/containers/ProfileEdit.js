@@ -110,7 +110,7 @@ class ProfileEdit extends Component {
           <label> Profit (%): </label>
           <Dropdown options={[{ value: "2" }, { value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.targetProfitChanged} value={this.state.targetProfit} placeholder="Select an option" />
           <label> Limit (€) : </label>
-          <Dropdown options={[{ value: "0" }, { value: "100" }, { value: "200" }, { value: "500" }, { value: "1000" }, { value: "2000" }]} onChange={this.euroLimitChanged} value={this.state.euroLimit} placeholder="Select an option" />
+          <Dropdown options={[{ value: "0" }, { value: "100" }, { value: "200" }, { value: "500" }, { value: "1000" }, { value: "1500" }, { value: "2000" }]} onChange={this.euroLimitChanged} value={this.state.euroLimit} placeholder="Select an option" />
           <FormGroup controlId="apiKey">
             <label>API key</label>
             <FormControl
