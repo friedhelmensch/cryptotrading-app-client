@@ -20,11 +20,41 @@ class TradeSettingsCheck extends Component {
     this.setState({ isChecking: true });
 
     try {
-      alert("Soon you will see a result here for: \n" +
-      "spread:             " + this.state.spread + "\n" +
-      "buy factor:         " + this.state.buyFactor + "\n" +
-      "cryptocurrency:     " + getDisplayname(this.state.currency));
+      if (!this.state.currency) {
+        alert("Please select a currency");
+        this.setState({ isChecking: false });
+        return;
+      }
+
+      const localUrl = "http://localhost:5000/shouldBuy?"
+      const baseUrl = "https://crypto-tradingapp-simulator.herokuapp.com/shouldBuy?"
+      const parameters = "pair=" + this.state.currency + "&signal=" + this.state.spread + "&factor=" + this.state.buyFactor;
+      const url = baseUrl + parameters;
+
+      const response = await fetch(url);
+      var data = await response.json();
+
       this.setState({ isChecking: false });
+
+      if(data.result.shouldBuy){
+        alert("YES " 
+        + "\n high: " + data.result.candle.high
+        + "\n low: " + data.result.candle.low
+        + "\n close: " + data.result.candle.close
+        + "\n high_gap: " + data.result.high_gap
+        + "\n low_gap: " + data.result.low_gap
+        + "\n factored_high_gap: " + data.result.factored_high_gap)
+      }
+      else{
+        alert("NO " 
+        + "\n high: " + data.result.candle.high
+        + "\n low: " + data.result.candle.low
+        + "\n close: " + data.result.candle.close
+        + "\n high_gap: " + data.result.high_gap
+        + "\n low_gap: " + data.result.low_gap
+        + "\n factored_high_gap: " + data.result.factored_high_gap
+      )}
+
     }
     catch (e) {
       alert(e);
