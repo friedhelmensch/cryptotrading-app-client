@@ -26,7 +26,7 @@ class TradeSettingsCheck extends Component {
         return;
       }
 
-      const localUrl = "http://localhost:5000/shouldBuy?"
+      //const localUrl = "http://localhost:5000/shouldBuy?"
       const baseUrl = "https://crypto-tradingapp-simulator.herokuapp.com/shouldBuy?"
       const parameters = "pair=" + this.state.currency + "&signal=" + this.state.spread + "&factor=" + this.state.buyFactor;
       const url = baseUrl + parameters;
