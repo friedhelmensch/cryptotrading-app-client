@@ -120,8 +120,10 @@ class TradeSettingsCheck extends Component {
   }
 
   render() {
+  
     return !this.state.isLoading && (
       <div className="Profile">
+        {"Blue = not checked, Green = Buy, Red = no buy, yellow = error while checking"}
         <form>
           <ListGroup>
             {!this.state.isLoading
