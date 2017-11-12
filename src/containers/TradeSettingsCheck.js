@@ -1,96 +1,142 @@
 import React, { Component } from 'react';
 import LoaderButton from '../components/LoaderButton';
 import './ProfileEdit.css';
-import Dropdown from 'react-dropdown';
-import { getDisplayname, getCurrencyOptions } from '../libs/currencyHelper';
+import { getDisplayname } from '../libs/currencyHelper';
+import { invokeApig } from '../libs/awsLib';
+import {
+  ListGroup,
+  ListGroupItem
+} from 'react-bootstrap';
+import update from 'immutability-helper';
 
 class TradeSettingsCheck extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      spread: "3",
-      buyFactor: "1.2"
+      settings: []
     };
   }
 
-  handleCheck = async (event) => {
-    event.preventDefault();
-
-    this.setState({ isChecking: true });
-
+  async componentDidMount() {
     try {
-      if (!this.state.currency) {
-        alert("Please select a currency");
-        this.setState({ isChecking: false });
-        return;
-      }
+      this.setState({ isLoading: true });
+      const loadedSettings = await this.loadSettings();
+      var settings = loadedSettings.map((loadedSetting) => {
+        return {
+          currency: loadedSetting.currency,
+          checkStatus: "notChecked",
+          id: loadedSetting.settingId
+        }
 
-      //const localUrl = "http://localhost:5000/shouldBuy?"
-      const baseUrl = "https://crypto-tradingapp-simulator.herokuapp.com/shouldBuy?"
-      const parameters = "pair=" + this.state.currency + "&signal=" + this.state.spread + "&factor=" + this.state.buyFactor;
-      const url = baseUrl + parameters;
-
-      const response = await fetch(url);
-      var data = await response.json();
-
-      this.setState({ isChecking: false });
-
-      if(data.result.shouldBuy){
-        alert("YES " 
-        + "\n high: " + data.result.candle.high
-        + "\n low: " + data.result.candle.low
-        + "\n close: " + data.result.candle.close
-        + "\n high_gap: " + data.result.high_gap
-        + "\n low_gap: " + data.result.low_gap
-        + "\n factored_high_gap: " + data.result.factored_high_gap)
-      }
-      else{
-        alert("NO " 
-        + "\n high: " + data.result.candle.high
-        + "\n low: " + data.result.candle.low
-        + "\n close: " + data.result.candle.close
-        + "\n high_gap: " + data.result.high_gap
-        + "\n low_gap: " + data.result.low_gap
-        + "\n factored_high_gap: " + data.result.factored_high_gap
-      )}
-
+      });
+      const profile = await this.loadProfile();
+      this.setState(
+        {
+          settings: settings,
+          spread: profile.spread,
+          buyFactor: profile.buyFactor,
+          isLoading: false
+        });
     }
     catch (e) {
       alert(e);
-      this.setState({ isChecking: false });
     }
   }
 
-  buyFactorChanged = (options) => {
-    this.setState({
-      buyFactor: options.value
-    });
+  loadSettings() {
+    return invokeApig({ path: '/settings' }, this.props.userToken);
   }
 
-  spreadChanged = (options) => {
-    this.setState({
-      spread: options.value
-    });
+  loadProfile() {
+    return invokeApig({ path: `/profile` }, this.props.userToken);
   }
 
-  currencyChanged = (options) => {
-    this.setState({
-      currency: options.value
+  handleReset = async (event) => {
+    const loadedSettings = await this.loadSettings();
+    var settings = loadedSettings.map((loadedSetting) => {
+      return {
+        currency: loadedSetting.currency,
+        checkStatus: "notChecked",
+        id: loadedSetting.settingId
+      }
     });
+    this.setState(
+      {
+        settings: settings
+      });
+  }
+
+  handleCheck = async (event) => {
+
+    this.setState({ isChecking: true });
+    var counter = 0;
+    this.state.settings.forEach(async function (setting) {
+      try {
+        const baseUrl = "https://crypto-tradingapp-simulator.herokuapp.com/shouldBuy?"
+        const parameters = "pair=" + setting.currency + "&signal=" + this.state.spread + "&factor=" + this.state.buyFactor;
+        const url = baseUrl + parameters;
+        const response = await fetch(url);
+        var data = await response.json();
+
+        var checkStatus = "no buy";
+        if (data.result.shouldBuy) checkStatus = "buy";
+        this.changeElement(setting.id, checkStatus);
+      
+      }catch(ex){
+        this.changeElement(setting.id, "error");
+      } finally {
+        counter++;
+        if (counter === this.state.settings.length) this.setState({ isChecking: false });
+      }
+    }, this);
+
+  }
+
+  changeElement(id, checkStatus) {
+
+    var settings = this.state.settings;
+    var settingIndex = settings.findIndex(function (setting) {
+      return setting.id === id;
+    });
+
+    var updatedSetting = update(settings[settingIndex], { checkStatus: { $set: checkStatus } });
+
+    var newSettings = update(settings, {
+      $splice: [[settingIndex, 1, updatedSetting]]
+    });
+
+    this.setState({ settings: newSettings });
+  }
+
+  renderSettingsList(settings) {
+    return settings.map((setting) => (
+      <ListGroupItem
+        key={setting.currency}
+        header={getDisplayname(setting.currency)}
+        bsStyle={setting.checkStatus === "notChecked" ? "info" : setting.checkStatus === "buy" ? "success" : setting.checkStatus === "error" ? "warning" : "danger"}>
+      </ListGroupItem>
+    ));
   }
 
   render() {
-    return (
+    return !this.state.isLoading && (
       <div className="Profile">
         <form>
-          <label> Spread: </label>
-          <Dropdown options={[{ value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.spreadChanged} value={this.state.spread} placeholder="Select an option" />
-          <label> Buy Factor: </label>
-          <Dropdown options={[{ value: "1.2" }, { value: "1.3" }, { value: "1.4" }, { value: "1.5" }, { value: "1.6" }, { value: "1.7" }]} onChange={this.buyFactorChanged} value={this.state.buyFactor} placeholder="Select an option" />
-          <label>Cryptocurrency to buy</label>
-          <Dropdown options={getCurrencyOptions()} onChange={this.currencyChanged} value={getDisplayname(this.state.currency)} placeholder="Select an option" />
-          <label></label>
+          <ListGroup>
+            {!this.state.isLoading
+              && this.renderSettingsList(this.state.settings)}
+          </ListGroup>
+          <ListGroup>
+            <ListGroupItem
+              key="1"
+              header={"Spread: " + this.state.spread}>
+            </ListGroupItem>
+            <ListGroupItem
+              key="2"
+              header={"Buy factor: " + this.state.buyFactor}>
+            </ListGroupItem>
+          </ListGroup>
           <LoaderButton
             block
             bsStyle="primary"
@@ -99,6 +145,12 @@ class TradeSettingsCheck extends Component {
             onClick={this.handleCheck}
             text="Check"
             loadingText="Checking..." />
+          <LoaderButton
+            block
+            bsStyle="primary"
+            bsSize="large"
+            onClick={this.handleReset}
+            text="Reset" />
         </form>
       </div>
     );
