@@ -35,7 +35,7 @@ class TradeSettingsCheck extends Component {
       this.setState(
         {
           settings: settings,
-          spread: profile.spread,
+          signal: profile.spread,
           buyFactor: profile.buyFactor,
           isLoading: false
         });
@@ -75,7 +75,7 @@ class TradeSettingsCheck extends Component {
     this.state.settings.forEach(async function (setting) {
       try {
         const baseUrl = "https://crypto-tradingapp-simulator.herokuapp.com/shouldBuy?"
-        const parameters = "pair=" + setting.currency + "&signal=" + this.state.spread + "&factor=" + this.state.buyFactor;
+        const parameters = "pair=" + setting.currency + "&signal=" + this.state.signal + "&factor=" + this.state.buyFactor;
         const url = baseUrl + parameters;
         const response = await fetch(url);
         var data = await response.json();
@@ -176,7 +176,7 @@ class TradeSettingsCheck extends Component {
           <ListGroup>
             <ListGroupItem
               key="1"
-              header={"Spread: " + this.state.spread}>
+              header={"Signal: " + this.state.signal}>
             </ListGroupItem>
             <ListGroupItem
               key="2"

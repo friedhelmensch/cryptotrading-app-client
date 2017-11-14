@@ -1,0 +1,12 @@
+{
+    "candle": {
+        "high": 270,
+        "low": 268,
+        "close": 269.58,
+        "pair": "XETHZEUR"
+    },
+    "high_gap": 0.15555555555556433,
+    "low_gap": 0.5895522388059682,
+    "factored_high_gap": 0.24888888888890293,
+    "shouldBuy": false
+}

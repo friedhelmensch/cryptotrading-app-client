@@ -16,7 +16,7 @@ class ProfileEdit extends Component {
       apiSecret: this.props.apiSecret,
       active: this.props.active,
       //convert number to string because dropdown can only handle strings properly
-      spread: "" + this.props.spread,
+      signal: "" + this.props.signal,
       buyFactor: "" + this.props.buyFactor,
       targetProfit : "" + this.props.targetProfit,
       euroLimit : "" + this.props.euroLimit
@@ -53,7 +53,7 @@ class ProfileEdit extends Component {
       var profile = {
         active: this.state.active,
         //convert strings to numbers again
-        spread: this.state.spread * 1,
+        spread: this.state.signal * 1,
         buyFactor: this.state.buyFactor * 1,
         targetProfit: this.state.targetProfit *  1,
         euroLimit: this.state.euroLimit * 1,
@@ -79,9 +79,9 @@ class ProfileEdit extends Component {
     });
   }
 
-  spreadChanged = (options) => {
+  signalChanged = (options) => {
     this.setState({
-      spread: options.value
+      signal: options.value
     });
   }
 
@@ -103,8 +103,8 @@ class ProfileEdit extends Component {
         <form>
           <label> Active: </label>
           <div><input type="checkbox" defaultChecked={this.state.active} onChange={this.toggleCheckboxChange} /> </div>
-          <label> Spread: </label>
-          <Dropdown options={[{ value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.spreadChanged} value={this.state.spread} placeholder="Select an option" />
+          <label> Signal: </label>
+          <Dropdown options={[{ value: "3" }, { value: "4" }, { value: "5" }, { value: "6" }, { value: "7" }]} onChange={this.signalChanged} value={this.state.signal} placeholder="Select an option" />
           <label> Buy Factor: </label>
           <Dropdown options={[{ value: "1.2" }, { value: "1.3" }, { value: "1.4" }, { value: "1.5" }, { value: "1.6" }, { value: "1.7" }]} onChange={this.buyFactorChanged} value={this.state.buyFactor} placeholder="Select an option" />
           <label> Profit (%): </label>

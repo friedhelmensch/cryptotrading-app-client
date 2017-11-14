@@ -37,7 +37,7 @@ class Profile extends Component {
         apiSecret: "***encrypted***",
         active: profile.active,
         buyFactor : profile.buyFactor,
-        spread : profile.spread,
+        signal : profile.spread,
         euroLimit : profile.euroLimit,
         targetProfit : profile.targetProfit,
         noProfile : false
@@ -78,7 +78,7 @@ class Profile extends Component {
     else
       return <ProfileEdit
         active={this.state.active}
-        spread={this.state.spread}
+        signal={this.state.signal}
         buyFactor={this.state.buyFactor}
         targetProfit={this.state.targetProfit}
         euroLimit = {this.state.euroLimit}
