@@ -8,6 +8,8 @@ import {
   ListGroupItem
 } from 'react-bootstrap';
 import update from 'immutability-helper';
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 class TradeSettingsCheck extends Component {
   constructor(props) {
@@ -28,7 +30,6 @@ class TradeSettingsCheck extends Component {
           checkStatus: "notChecked",
           id: loadedSetting.settingId
         }
-
       });
       const profile = await this.loadProfile();
       this.setState(
@@ -79,12 +80,33 @@ class TradeSettingsCheck extends Component {
         const response = await fetch(url);
         var data = await response.json();
 
-        var checkStatus = "no buy";
-        if (data.result.shouldBuy) checkStatus = "buy";
-        this.changeElement(setting.id, checkStatus);
-      
-      }catch(ex){
-        this.changeElement(setting.id, "error");
+        var updatedSetting = {
+          currency: setting.currency,
+          id: setting.currency,
+          shouldBuy: "" + data.result.shouldBuy,
+          high: data.result.candle.high.toFixed(2),
+          low: data.result.candle.low.toFixed(2),
+          close: data.result.candle.close.toFixed(2),
+          high_gap: data.result.high_gap.toFixed(2),
+          low_gap: data.result.low_gap.toFixed(2),
+          factored_high_gap: data.result.factored_high_gap.toFixed(2)
+        }
+
+        this.changeElement(setting.id, updatedSetting)
+
+      } catch (ex) {
+        var updatedSetting = {
+          currency: setting.currency,
+          id: setting.currency,
+          shouldBuy: "error",
+          high: "error",
+          low: "error",
+          close: "error",
+          high_gap: "error",
+          low_gap: "error",
+          factored_high_gap: "error",
+        }
+        this.changeElement(setting.id, updatedSetting)
       } finally {
         counter++;
         if (counter === this.state.settings.length) this.setState({ isChecking: false });
@@ -93,14 +115,12 @@ class TradeSettingsCheck extends Component {
 
   }
 
-  changeElement(id, checkStatus) {
+  changeElement(id, updatedSetting) {
 
     var settings = this.state.settings;
     var settingIndex = settings.findIndex(function (setting) {
       return setting.id === id;
     });
-
-    var updatedSetting = update(settings[settingIndex], { checkStatus: { $set: checkStatus } });
 
     var newSettings = update(settings, {
       $splice: [[settingIndex, 1, updatedSetting]]
@@ -109,26 +129,50 @@ class TradeSettingsCheck extends Component {
     this.setState({ settings: newSettings });
   }
 
-  renderSettingsList(settings) {
-    return settings.map((setting) => (
-      <ListGroupItem
-        key={setting.currency}
-        header={getDisplayname(setting.currency)}
-        bsStyle={setting.checkStatus === "notChecked" ? "info" : setting.checkStatus === "buy" ? "success" : setting.checkStatus === "error" ? "warning" : "danger"}>
-      </ListGroupItem>
-    ));
-  }
-
   render() {
-  
     return !this.state.isLoading && (
       <div className="Profile">
-        {"Blue = not checked, Green = Buy, Red = no buy, yellow = error while checking"}
         <form>
-          <ListGroup>
-            {!this.state.isLoading
-              && this.renderSettingsList(this.state.settings)}
-          </ListGroup>
+          <ReactTable
+            data={this.state.settings}
+            showPagination={false}
+            columns={[
+              {
+                Header: "Currency",
+                accessor: d => getDisplayname(d.currency),
+                id: d => d.currency
+              },
+              {
+                Header: "Buy?",
+                accessor: "shouldBuy"
+              }, {
+                Header: "High",
+                accessor: "high"
+              },
+              {
+                Header: "Low",
+                accessor: "low"
+              },
+              {
+                Header: "Close",
+                accessor: "close"
+              },
+              {
+                Header: "High_Gap",
+                accessor: "high_gap"
+              },
+              {
+                Header: "Low_Gap",
+                accessor: "low_gap"
+              },
+              {
+                Header: "Factored_High",
+                accessor: "factored_high_gap"
+              }
+            ]}
+            defaultPageSize={this.state.settings.length}
+            className="-striped -highlight"
+          />
           <ListGroup>
             <ListGroupItem
               key="1"
