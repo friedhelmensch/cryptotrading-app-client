@@ -95,7 +95,7 @@ class TradeSettingsCheck extends Component {
         this.changeElement(setting.id, updatedSetting)
 
       } catch (ex) {
-        var updatedSetting = {
+        var errorSetting = {
           currency: setting.currency,
           id: setting.currency,
           shouldBuy: "error",
@@ -106,7 +106,7 @@ class TradeSettingsCheck extends Component {
           low_gap: "error",
           factored_high_gap: "error",
         }
-        this.changeElement(setting.id, updatedSetting)
+        this.changeElement(setting.id, errorSetting)
       } finally {
         counter++;
         if (counter === this.state.settings.length) this.setState({ isChecking: false });
